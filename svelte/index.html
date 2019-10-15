@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Svelte | Store</title>
+</head>
+<body>
+    <h1>Svelte | Store</h1>
+    <script>
+        const writable = value => ({
+            listeners: [],
+            subscribe(listener) {
+                this.listeners.push(listener)
+            },
+            set(newValue) {
+                value = newValue
+                this.listeners.forEach(l => l(value))
+            },
+            update(callback) {
+                this.set(callback(value))
+            },
+        })
+
+        const count = writable(0)
+        count.subscribe(
+            value => console.log('Atualizou => ', value)
+        )
+
+        count.set(10)
+        count.update(oldValue => oldValue * 2)
+        count.set(5)
+        count.update(oldValue => oldValue - 1)
+    </script>
+</body>
+</html>
